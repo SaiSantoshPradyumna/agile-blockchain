@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-align: center;
+        }
+
+        .role-badge {
+            background-color: #3498db;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .dashboard-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .dashboard-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-item a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 1.1em;
+            display: block;
+            padding: 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .dashboard-item a:hover {
+            background-color: #e9ecef;
+        }
+
+        .logout-container {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* Icons using emoji (you can replace these with actual icons) */
+        .dashboard-item a::before {
+            content: '';
+            display: block;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .upload::before { content: '📤'; }
+        .documents::before { content: '📄'; }
+        .blockchain::before { content: '🔗'; }
+        .tasks::before { content: '📋'; }
+        .create-task::before { content: '✏️'; }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, {{ current_user.username }}!</h1>
+        <div style="text-align: center;">
+            <span class="role-badge">{{ current_user.role }}</span>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="dashboard-item">
+                <a href="/upload" class="upload">Upload Document</a>
+            </div>
+            <div class="dashboard-item">
+                <a href="/documents" class="documents">View Documents</a>
+            </div>
+            <div class="dashboard-item">
+                <a href="/blockchain" class="blockchain">View Blockchain</a>
+            </div>
+            <div class="dashboard-item">
+                <a href="/tasks" class="tasks">View Tasks</a>
+            </div>
+            <div class="dashboard-item">
+                <a href="/tasks/create" class="create-task">Create Task</a>
+            </div>
+        </div>
+
+        <div class="logout-container">
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </div>
+</body>
+</html>

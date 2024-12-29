@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blockchain</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        div {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        div:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        p {
+            margin: 10px 0;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        strong {
+            color: #2c3e50;
+            font-weight: 600;
+            min-width: 120px;
+            display: inline-block;
+        }
+
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #2980b9;
+        }
+
+        /* For better responsive design */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            div {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Blockchain</h1>
+    {% for block in chain %}
+    <div>
+        <p><strong>Block ID:</strong> {{ block.id }}</p>
+        <p><strong>Timestamp:</strong> {{ block.timestamp }}</p>
+        <p><strong>Action:</strong> {{ block.action }}</p>
+        <p><strong>User:</strong> {{ block.username }}</p>
+        <p><strong>Document Hash:</strong> {{ block.document_hash }}</p>
+        <p><strong>Previous Hash:</strong> {{ block.previous_hash }}</p>
+    </div>
+    {% endfor %}
+    <br>
+    <a href="/dashboard">Back to Dashboard</a>
+</body>
+</html>

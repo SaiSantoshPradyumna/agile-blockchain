@@ -1,0 +1,311 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Document</title>
+</head>
+<body>
+    <h1>Upload a Document</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul style="color: red;">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="document">Select a file:</label><br>
+        <input type="file" name="document" required><br><br>
+        <input type="submit" value="Upload">
+    </form>
+    <br>
+    <a href="/dashboard">Back to Dashboard</a>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: #3498db;
+        }
+
+        .alert {
+            display: none;  /* Hidden by default */
+            background: #fee;
+            border-left: 4px solid #f56565;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert ul {
+            list-style-type: none;
+            color: #c53030;
+            margin: 0;
+            padding: 0;
+        }
+
+        .upload-container {
+            margin: 20px 0;
+        }
+
+        .file-upload-label {
+            display: block;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            background: #f8f9fa;
+            border-color: #2980b9;
+        }
+
+        .file-upload-area.dragover {
+            background: #e8f4fc;
+            border-color: #2980b9;
+        }
+
+        .file-upload-icon {
+            font-size: 2em;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-text {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: #2980b9;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #3498db;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        #selected-file {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head><body>
+    <div class="container">
+        <h1>Upload a Document</h1>
+
+        <!-- Store flash messages in a hidden div -->
+        <div id="flash-messages" style="display: none;">
+            {{ get_flashed_messages()|tojson|safe }}
+        </div>
+
+        <!-- Alert container -->
+        <div id="alert" class="alert">
+            <ul id="alert-messages"></ul>
+        </div>
+
+        <form action="/upload" method="post" enctype="multipart/form-data" id="upload-form">
+            <div class="upload-container">
+                <label class="file-upload-label">Select a file to upload</label>
+                <div class="file-upload-area" id="drop-zone">
+                    <div class="file-upload-icon">📄</div>
+                    <div class="file-upload-text">Drag and drop your file here or click to browse</div>
+                    <input type="file" name="document" required class="file-upload-input" id="file-input">
+                    <div id="selected-file"></div>
+                </div>
+            </div>
+            <button type="submit" class="submit-btn">Upload Document</button>
+        </form>
+
+        <a href="/dashboard" class="back-link">Back to Dashboard</a>
+    </div>
+
+    <script>
+        // Handle flash messages
+        document.addEventListener('DOMContentLoaded', function() {
+            const flashMessagesDiv = document.getElementById('flash-messages');
+            const alertDiv = document.getElementById('alert');
+            const alertMessages = document.getElementById('alert-messages');
+            
+            try {
+                const messages = JSON.parse(flashMessagesDiv.textContent);
+                if (messages && messages.length > 0) {
+                    messages.forEach(message => {
+                        const li = document.createElement('li');
+                        li.textContent = message;
+                        alertMessages.appendChild(li);
+                    });
+                    alertDiv.classList.add('show');
+                }
+            } catch (e) {
+                console.error('Error parsing flash messages:', e);
+            }
+        });
+
+        // File upload handling
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const selectedFile = document.getElementById('selected-file');
+
+        // Handle file selection
+        fileInput.addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            if (fileName) {
+                selectedFile.textContent = `Selected file: ${fileName}`;
+            }
+        });
+
+        // Handle drag and drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.classList.add('dragover');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('dragover');
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            if (files[0]) {
+                selectedFile.textContent = `Selected file: ${files[0].name}`;
+            }
+        }
+    </script>
+</body>
+</html>
