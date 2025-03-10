@@ -121,7 +121,7 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        role = request.form['role']  # 'developer', 'manager', as of presnt.
+        role = request.form['role']  # e.g. 'developer', 'manager', etc.
 
         connection = sqlite3.connect('blockchain.db')
         cursor = connection.cursor()
@@ -337,6 +337,11 @@ def view_tasks():
 @app.route('/tasks/create', methods=['GET', 'POST'])
 @login_required
 def create_task():
+    # Only users with the "manager" role can create tasks
+    if current_user.role != 'manager':
+        flash('You do not have permission to create tasks.')
+        return redirect(url_for('view_tasks'))
+
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
@@ -388,7 +393,7 @@ def update_task(task_id):
         cursor.execute('UPDATE tasks SET status=? WHERE id=?', (status, task_id))
         connection.commit()
 
-        # Add to blockchain
+        # Add to blockchain (documenting the update action)
         task_content = f'Update Task {task_id} Status to {status}'.encode()
         cursor.execute('SELECT document_hash FROM blockchain ORDER BY id DESC LIMIT 1')
         result = cursor.fetchone()

@@ -148,9 +148,12 @@
             <div class="dashboard-item">
                 <a href="/tasks" class="tasks">View Tasks</a>
             </div>
+            <!-- Only show "Create Task" if the user is a manager -->
+            {% if current_user.role == 'manager' %}
             <div class="dashboard-item">
                 <a href="/tasks/create" class="create-task">Create Task</a>
             </div>
+            {% endif %}
         </div>
 
         <div class="logout-container">
